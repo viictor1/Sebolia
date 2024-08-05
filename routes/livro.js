@@ -22,4 +22,11 @@ router.get('/', (req, res) => {
     res.send(livrosMock);
 });
 
+router.post('/', (req, res) => {
+    const livro = req.body;
+    livrosMock.push(livro);
+    res.status(201).json(livro);
+});
+
+
 module.exports = router;
