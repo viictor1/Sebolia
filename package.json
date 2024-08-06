@@ -4,13 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node server.js", 
     "start": "node server.js"
-=======
-    "test": "echo \"Error: no test specified\" && exit 1"
->>>>>>> e90617b (chore: base inicial)
   },
   "author": "",
   "license": "ISC",
