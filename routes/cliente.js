@@ -1,28 +1,11 @@
 const express = require('express');
-const router = express.Router();
+const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+const session = require('express-session');
+const app = express();
 
-const clientesMock = [
-    {
-      email: 'tico@utfpr.edu.br'
-    },
-    {
-        titulo: 'bornia',
-        autor: 'bornia',
-        editora: 'bornia',
-        ano: 2005,
-        preco: 250
-    },
-];
+app.set('view engine', 'ejs');
 
-router.get('/', (req, res) => {
-    res.send(livrosMock);
-});
+app.use(bodyParser.urlencoded({ extended: true }));
 
-router.post('/', (req, res) => {
-    const livro = req.body;
-    livrosMock.push(livro);
-    res.status(201).json(livro);
-});
-
-
-module.exports = router;
+app.use(session)

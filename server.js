@@ -3,40 +3,65 @@ const app = express();
 const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
-const login = "tico";
-const password = "123";
-app.use(express.json());
+const bcrypt = require('bcryptjs');
 
+app.set('view engine', 'ejs');
+app.set('views',path.join(__dirname, 'views'));
+
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 const livroRoutes = require('./routes/livro');
 
-
 app.use('/livro', livroRoutes);
-app.use(bodyParser.urlencoded({extended:true}));
 
-app.use(session({ secret: 'jasdf9jasdf809-1' }));
+app.use(session({
+    secret: 'secreto',
+    resave: false,
+    saveUninitialized: true
+}));
 
-// Configuração do mecanismo de template
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+let users = [];
 
-app.post('/',(req,res)=>{
-    if(req.body.password == password && req.body.login == login){
-        //logado com sucesso
-        req.session.login = login;
-        res.render('logado');
+app.get('/',(req,res)=>{
+    res.render('index');
+});
+
+app.get('/cadastro',(req,res)=>{
+    res.render('cadastro');
+});
+
+app.post('/cadastro',(req,res)=>{
+    const {username,password} = req.body;
+
+    const hashedPassword = bcrypt.hashSync(password, 8);
+
+    users.push({username, password: hashedPassword});
+
+    res.redirect('/login');
+});
+
+app.get('/login',(req,res)=>{
+    res.render('login');
+});
+
+app.post('/login', (req,res)=>{
+    const { username, password } = req.body;
+    const user = users.find(user => user.username === username);
+
+    if(user && bcrypt.compareSync(password, user.password)){
+        req.session.user = user;
+        res.redirect('/dashboard');
     }else{
-
-        res.render('index');
+        res.send('usuario ou senha errados');
     }
-})
+});
 
-app.get('/', (req, res) => {
-    if(req.session.login){
-        res.render('logado');
+app.get('/dashboard',(req,res)=>{
+    if(req.session.user){
+        res.send('bem vindo ao dashboard');
     }else{
-
-        res.render('index'); // Certifique-se de que você tenha um arquivo 'index.ejs' na pasta 'views'
+        res.send('voce precisa estar logado para acessar esta pagina');
     }
 });
 
