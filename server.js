@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 const livroRoutes = require('./routes/livro');
 
 app.use('/livro', livroRoutes);
