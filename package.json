@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --env-file .env server.js",
-    "start": "node --env-file .env server.js"
+    "dev": "prisma generate --no-hints && node --env-file .env server.js",
+    "start": "prisma generate --no-hints && node --env-file .env server.js"
   },
   "author": "",
   "license": "ISC",
