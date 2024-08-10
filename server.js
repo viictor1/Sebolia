@@ -11,6 +11,8 @@ app.set('views',path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.use(express.json());
+
 const livroRoutes = require('./routes/livro');
 
 app.use('/livro', livroRoutes);
