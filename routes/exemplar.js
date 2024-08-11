@@ -109,7 +109,7 @@ router.put('/', async (req, res) => {
         });
         res.status(200).json(exemplarAtualizado);
     }
-    catch
+    catch{
         res.status(404).json({ message: "Exemplar não encontrado" })
     }
 
