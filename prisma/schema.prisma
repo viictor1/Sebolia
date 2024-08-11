@@ -20,10 +20,11 @@ model Livro {
 }
 
 model Exemplar {
-  Livro   Livro  @relation(fields: [livroId], references: [id])
-  estado  String
-  livroId Int
-  preco   Float
+  Livro      Livro  @relation(fields: [livroId], references: [id])
+  estado     String
+  livroId    Int
+  preco      Float
+  quantidade Int
 
   @@id([livroId, estado])
 }
