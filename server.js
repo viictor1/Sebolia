@@ -1,9 +1,8 @@
 const express = require('express');
 const app = express();
-const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs');
+const session = require('express-session');
 
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname, 'views'));
@@ -11,38 +10,25 @@ app.set('views',path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.use(session({
+    secret: 'your-secret-key', // Replace with your secret key
+    resave: false,
+    saveUninitialized: true,
+}));
+
 app.use(express.json());
 
 const livroRoutes = require('./routes/livro');
 const cadastroRoutes = require('./routes/cadastro');
+const loginRoutes = require('./routes/login');
+const dashboardRoutes = require('./routes/dashboard');
+const indexRoutes = require('./routes/index');
 
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
-
-
-app.get('/login',(req,res)=>{
-    res.render('login');
-});
-
-app.post('/login', (req,res)=>{
-    const { username, password } = req.body;
-    const user = users.find(user => user.username === username);
-
-    if(user && bcrypt.compareSync(password, user.password)){
-        req.session.user = user;
-        res.redirect('/dashboard');
-    }else{
-        res.send('usuario ou senha errados');
-    }
-});
-
-app.get('/dashboard',(req,res)=>{
-    if(req.session.user){
-        res.send('bem vindo ao dashboard');
-    }else{
-        res.send('voce precisa estar logado para acessar esta pagina');
-    }
-});
+app.use('/login', loginRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use('/', indexRoutes);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {

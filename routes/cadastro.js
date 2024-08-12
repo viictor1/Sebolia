@@ -1,20 +1,8 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const session = require('express-session');
 
-router.use(session({
-    secret: 'secreto',
-    resave: false,
-    saveUninitialized: true
-}));
-
-let users = [];
-
-router.get('/',(req,res)=>{
-    res.render('index');
-});
+users = [];
 
 router.get('/',(req,res)=>{
     res.render('cadastro');
