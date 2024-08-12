@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(session({
-    secret: 'your-secret-key', // Replace with your secret key
+    secret: 's983245803oibf-rji',
     resave: false,
     saveUninitialized: true,
 }));
