@@ -14,34 +14,11 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.json());
 
 const livroRoutes = require('./routes/livro');
+const cadastroRoutes = require('./routes/cadastro');
 
 app.use('/livro', livroRoutes);
+app.use('/cadastro', cadastroRoutes);
 
-app.use(session({
-    secret: 'secreto',
-    resave: false,
-    saveUninitialized: true
-}));
-
-let users = [];
-
-app.get('/',(req,res)=>{
-    res.render('index');
-});
-
-app.get('/cadastro',(req,res)=>{
-    res.render('cadastro');
-});
-
-app.post('/cadastro',(req,res)=>{
-    const {username,password} = req.body;
-
-    const hashedPassword = bcrypt.hashSync(password, 8);
-
-    users.push({username, password: hashedPassword});
-
-    res.redirect('/login');
-});
 
 app.get('/login',(req,res)=>{
     res.render('login');
