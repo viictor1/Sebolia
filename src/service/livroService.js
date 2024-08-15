@@ -1,98 +1,89 @@
-const { PrismaClient } = require('@prisma/client');
+const livroRepository = require('../repository/livroRepository');
 
-const express = require('express');
-const router = express.Router();
-const prisma = new PrismaClient();
+const getAllLivros = async (req, res) =>{
+    const livros = await livroRepository.getAllLivros();
+    res.status(200).json(livros);
+}
 
-router.get('/', async (req, res) => {
-    res.send(await prisma.livro.findMany());
-});
-
-router.get('/:id', async (req, res) => {
+const getLivroById = async (req, res) =>{
     const id = parseInt(req.params.id, 10);
-
     if (isNaN(id)) {
-        return res.status(400).send({ error: 'ID inválido' });
+        return res.status(400).json({ error: 'ID inválido' });
     }
 
     try {
-        const livro = await prisma.livro.findUniqueOrThrow({
-            where: { id }
-        });
-        res.send(livro);
+        const livro = await livroRepository.getLivroById(id);
+        res.status(200).json(livro);
     } catch (error) {
         res.status(404).send({ error: 'Livro não encontrado' });
     }
-});
 
-router.post('/', async (req, res) => {
-    const livroBody = req.body;
-    
-    if(!validarLivro(res, livroBody)){
-        return
+}
+
+const createLivro = async (req, res) =>{
+    const livroData = req.body;
+    if(!validarLivro(res, livroData)){
+        return;
     }
-    const livroSalvo = await prisma.livro.create({
-        data: {
-            titulo: livroBody.titulo,
-            autor: livroBody.autor,
-            editora: livroBody.editora,
-            ano: livroBody.ano
+
+    const livroSalvo = await livroRepository.createLivro(
+        {
+            titulo: livroData.titulo,
+            autor: livroData.autor,
+            editora: livroData.editora,
+            ano: livroData.ano
         }
-    });
-
+    );
+    
     res.status(200).json(livroSalvo);
-});
+}
 
-router.delete('/:id', async (req, res) => {
+const deleteLivro = async (req, res) => {
     const id = parseInt(req.params.id, 10);
-
     if(isNaN(id)){
         res.status(400).json({ message: 'ID Inválido' });
         return;
     }
-
+    
     try{
-        const livro = await prisma.livro.delete({
-            where: { id }
-        });
+        const livro = await livroRepository.deleteLivro(id);
         res.status(200).json({ message: `${livro.titulo} deletado com sucesso` });
     }
     catch{
         res.status(404).json({ message: "Livro não encontrado" })
     }
+}
 
-});
-
-router.put('/:id', async (req, res) => {
+const updateLivro = async (req, res) => {
     const id = parseInt(req.params.id, 10);
-
     if(isNaN(id)){
         res.status(400).json({ message: 'ID Inválido' });
         return;
     }
 
-    const livroBody = req.body;
-    if(!validarLivro(res, livroBody)){
+    const livroData = req.body;
+    if(!validarLivro(res, livroData)){
         return;
     }
     
     try{
-        const livroAtualizado = await prisma.livro.update({
-            where: { id },
-            data: {
-                titulo: livroBody.titulo,
-                autor: livroBody.autor,
-                editora: livroBody.editora,
-                ano: livroBody.ano
+        const livroAtualizado = await livroRepository.updateLivro(
+            id,
+            {
+                titulo: livroData.titulo,
+                autor: livroData.autor,
+                editora: livroData.editora,
+                ano: livroData.ano
             }
-        });
+        );
         res.status(200).json(livroAtualizado);
     }
     catch{
         res.status(404).json({ message: "Livro não encontrado" })
     }
 
-});
+}
+
 
 const validarLivro = (res, livro) =>{
     if(!livro){
@@ -123,4 +114,10 @@ const validarLivro = (res, livro) =>{
     return true;
 }
 
-module.exports = router;
+module.exports = {
+    getAllLivros,
+    getLivroById,
+    createLivro,
+    updateLivro,
+    deleteLivro
+};

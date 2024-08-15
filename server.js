@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-const livroRoutes = require('./routes/livro');
+const livroRoutes = require('./src/routes/livro');
 
 app.use('/livro', livroRoutes);
 
