@@ -9,6 +9,7 @@
    
     <div class="container">
         <h1>Cadastro</h1>
+        <div id="error-message" style="color: red;"></div>
         <form action="/cadastro" method="POST">
             <label for="username">Usuário:</label>
             <input type="text" id="username" name="username" required>
@@ -20,5 +21,11 @@
         </form>
         <a href="/login">Já tem uma conta? Faça login</a>
     </div>
+    <script>
+        const errorMessage = '<%= error || "" %>';
+        if(errorMessage){
+            document.getElementById('error-message').innerHTML = errorMessage;
+        }
+    </script>
 </body>
 </html>
