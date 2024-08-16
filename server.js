@@ -6,7 +6,7 @@ const session = require('express-session');
 
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname, 'views'));
-
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
