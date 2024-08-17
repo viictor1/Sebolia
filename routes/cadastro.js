@@ -104,5 +104,34 @@ router.delete('/:id', async (req,res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, password, cellphone } = req.body;
+
+    try {
+        // Hash da nova senha, se fornecida
+        let updatedData = {
+            usuario: username,
+            celular: cellphone,
+        };
+
+        if (password) {
+            updatedData.senha = bcrypt.hashSync(password, 8);
+        }
+
+        // Atualiza o cliente no banco de dados
+        const clienteAtualizado = await prisma.cliente.update({
+            where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
+            data: updatedData,
+        });
+
+        res.json({ message: 'Cliente atualizado com sucesso', clienteAtualizado });
+    } catch (error) {
+        console.error('Erro ao atualizar o cliente:', error);
+        res.status(500).json({ message: 'Erro ao atualizar o cliente' });
+    }
+});
+
+
 
 module.exports = router;
