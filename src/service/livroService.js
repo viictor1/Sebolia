@@ -106,7 +106,9 @@ const validarLivro = (res, livro) =>{
         return false;
     }
 
-    if(!livro.ano){
+    livro.ano = parseInt(livro.ano);
+
+    if(!livro.ano || typeof(livro.ano) != "number"){
         res.status(400).json({ message: 'Ano Inválido' });
         return false;
     }
