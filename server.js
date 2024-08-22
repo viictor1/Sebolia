@@ -8,8 +8,8 @@ app.use(cors({
     origin: '*'
 }));
 
-const livroRoutes = require('./src/routes/livro');
-const exemplarRoutes = require('./routes/exemplar');
+const livroRoutes = require('./src/routes/livroRoute');
+const exemplarRoutes = require('./src/routes/exemplarRoute');
 
 
 app.use('/livro', livroRoutes);
