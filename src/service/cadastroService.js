@@ -1,22 +1,19 @@
-const { PrismaClient } = require('@prisma/client');
-const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcryptjs');
-const prisma = new PrismaClient();
+const cadastroRepository = require('../repository/cadastroRepository');
 
 // Rota para exibir o formulário de cadastro
-router.get('/', (req, res) => {
-    res.render('cadastro',{
-        error:'',
-        username: '',
-        cellphone:''
+const getCadastro = (req, res) => {
+    res.render('cadastro', {
+        error: '',
+        nome: '',
+        usuario: '',
+        telefone: ''
     });
-});
+}
 
 // Rota para processar o formulário de cadastro
-router.post('/', async (req, res) => {
-    const { username, password, cellphone } = req.body;
-    
+const createCadastro = async (req, res) => {
+    const { username, password, confirmationPassword, cellphone } = req.body;
     if(!password || password.length < 6){
         return res.status(400).render('cadastro',{
             error: 'A senha deve ter no minimo 6 caracteres',
@@ -32,17 +29,17 @@ router.post('/', async (req, res) => {
             cellphone
         });
     }
+    if(password != confirmationPassword){
+        return res.render('cadastro', {
+            error: 'As senhas devem ser iguais',
+            username,
+            cellphone
+        });
+    }
 
     try {
         // Verificar se o nome de usuário já existe
-        const existingUser = await prisma.cliente.findFirst({
-            where: {
-                OR:[
-                    {usuario: username},
-                    {celular: cellphone}
-                ]
-            }
-        });
+        const existingUser = await cadastroRepository.getCadastro(username, cellphone);
 
         console.log("Existing User:", existingUser); // Verifique o valor retornado
 
@@ -60,13 +57,19 @@ router.post('/', async (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, 8);
 
         // Criar um novo cliente no banco de dados
-        const clienteSalvo = await prisma.cliente.create({
-            data: {
+        const clienteSalvo = await cadastroRepository.createCadastro(
+            {
                 usuario: username,
                 senha: hashedPassword,
                 celular: cellphone
             }
-        });
+        )
+        //     data: {
+        //         usuario: username,
+        //         senha: hashedPassword,
+        //         celular: cellphone
+        //     }
+        // });
         console.log("Cliente salvo com sucesso:", clienteSalvo);
 
         // Redirecionar para a página de login
@@ -75,26 +78,21 @@ router.post('/', async (req, res) => {
         console.error("Erro ao processar o cadastro:", error);
         res.status(500).render('cadastro', { error: 'Erro ao processar o cadastro', username, cellphone });
     }
-});
+};
 
-router.delete('/:id', async (req,res) => {
+const deleteCadastro = async (req,res) => {
     const { id } = req.params;
 
     try{
-        const cliente = prisma.cliente.findUnique({
-            where:{
-                id: parseInt(id)
-            }
-        });
+        const cliente = cadastroRepository.deleteCadastro(id);
+        res.status(200).json({message: `${cliente.nome} deletado com sucesso`});
+        //     where:{
+        //         id: parseInt(id)
+        //     }
+        // });
         if(!cliente){
             return res.status(404).json({message: 'cliente nao encontrado'});
         }
-
-        await prisma.cliente.delete({
-            where:{
-                id:parseInt(id)
-            }
-        });
         res.status(200).json({message: 'cliente deletado com sucesso'});
         
     } catch(error){
@@ -102,11 +100,16 @@ router.delete('/:id', async (req,res) => {
         console.error("erro ao deletar o cliente", error);
         res.status(500).json({message: "erro ao deletar o cliente"});
     }
-});
+};
 
-router.put('/:id', async (req, res) => {
+const updateCadastro = async (req, res) => {
     const { id } = req.params;
     const { username, password, cellphone } = req.body;
+
+    if(isNaN(id)){
+        res.status(400).json({message: 'ID inválido'});
+        return;
+    }
 
     try {
         // Hash da nova senha, se fornecida
@@ -120,18 +123,31 @@ router.put('/:id', async (req, res) => {
         }
 
         // Atualiza o cliente no banco de dados
-        const clienteAtualizado = await prisma.cliente.update({
-            where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
-            data: updatedData,
-        });
+        const clienteAtualizado = await cadastroRepository.updateCadastro(
+            id,
+            {
+                nome: this.name,
+                usuario: username,
+                senha: password,
+                celular: cellphone
+            }
+            
+            // where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
+            // data: updatedData,
+        );
 
         res.json({ message: 'Cliente atualizado com sucesso', clienteAtualizado });
     } catch (error) {
         console.error('Erro ao atualizar o cliente:', error);
         res.status(500).json({ message: 'Erro ao atualizar o cliente' });
     }
-});
+};
 
 
 
-module.exports = router;
+module.exports = {
+    getCadastro,
+    createCadastro,
+    deleteCadastro,
+    updateCadastro
+};

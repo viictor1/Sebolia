@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cors = require('cors');
 
 app.use(cors({
     origin: '*'
@@ -22,11 +23,11 @@ app.use(session({
 
 app.use(express.json());
 
-const livroRoutes = require('./routes/livro');
-const cadastroRoutes = require('./routes/cadastro');
-const loginRoutes = require('./routes/login');
-const dashboardRoutes = require('./routes/dashboard');
-const indexRoutes = require('./routes/index');
+const livroRoutes = require('./src/routes/livro');
+const cadastroRoutes = require('./src/routes/cadastro');
+const loginRoutes = require('./src/routes/login');
+const dashboardRoutes = require('./src/service/dashboardService');
+const indexRoutes = require('./src/service/indexService');
 
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
