@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "prisma generate --no-hints && nodemon --env-file .env server.js",
-    "start": "prisma generate --no-hints && nodemon --env-file .env server.js"
+    "dev": "prisma generate --no-hints && nodemon server.js",
+    "start": "prisma generate --no-hints && nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.18.0",
+    "cors": "^2.8.5",
     "express": "^4.19.2"
   },
   "devDependencies": {
