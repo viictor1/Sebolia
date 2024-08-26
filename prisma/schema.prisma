@@ -33,4 +33,5 @@ model Cliente {
   usuario String @unique
   senha   String
   celular String
+  role    String @default("user")
 }

@@ -1,17 +1,17 @@
 const authPage = (permissions) =>{
     return (req, res, next) =>{
-        const userRole = req.session.user;
+        const user = req.session.user;
 
-        if(!userRole){
-            return json.status(401).json("É necessário fazer login para acessar.");
+        if(!user){
+            return res.status(401).json("É necessário fazer login para acessar.");
         }
 
-        if(permissions.includes(userRole)){
+        if(permissions.includes(user.role)){
             next();
             return;
         }
 
-        return json.status(401).json("Usuário não possui permissão para acessar");
+        return res.status(401).json("Usuário não possui permissão para acessar");
     }
 }
 
