@@ -5,12 +5,10 @@ const prisma = new PrismaClient();
 
 async function main() {
 
-    const hashedPassword = bcrypt.hashSync("admin123", 8);
-
     const admin = await cadastroRepository.createCadastro(
         {
             usuario: "admin",
-            senha: hashedPassword,
+            senha: "$2a$08$set/Uetf4u4qiR8F1AP1su7v69e84lTf3uz4j6AN1kNW1KuQIlcQ.",
             celular: "44444444444",
             role: "admin"
         }
