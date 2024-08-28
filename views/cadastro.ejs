@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+</head>
+<body>
+   
+    <div class="container">
+        <h1>Cadastro</h1>
+        <div id="error-message" style="color: red;"></div>
+        <form action="/cadastro" method="POST">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="confirmationPassword">Confirmar senha:</label>
+            <input type="password" id="confirmationPassword" name="confirmationPassword" required>
+            <label for="cellphone">Celular:</label>
+            <input type="tel" id="cellphone" pattern="[0-9]{11}" inputmode="numeric" name="cellphone" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <a href="/login">Já tem uma conta? Faça login</a>
+    </div>
+    <script>
+        const errorMessage = '<%= error || "" %>';
+        if(errorMessage){
+            document.getElementById('error-message').innerHTML = errorMessage;
+        }
+    </script>
+</body>
+</html>
