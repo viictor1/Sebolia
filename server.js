@@ -31,7 +31,9 @@ const cadastroRoutes = require('./src/routes/cadastro');
 const loginRoutes = require('./src/routes/login');
 const dashboardRoutes = require('./src/service/dashboardService');
 const indexRoutes = require('./src/service/indexService');
+const exemplarRoutes = require('./src/routes/exemplarRoute');
 
+app.use('/exemplar', exemplarRoutes);
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
 app.use('/login', loginRoutes);
