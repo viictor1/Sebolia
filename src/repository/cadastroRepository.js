@@ -33,10 +33,18 @@ const deleteCadastro = async (id) => {
     });
 };
 
+const atualizarSaldo = async (id, saldo) => {
+    return await prisma.cliente.update({
+        where: { id: parseInt(id) },
+        data: {saldo: parseFloat(saldo)}
+    });
+}
+
 module.exports = {
     getCadastro,
     createCadastro,
     deleteCadastro,
-    updateCadastro
+    updateCadastro,
+    atualizarSaldo
 };
 

@@ -32,12 +32,14 @@ const loginRoutes = require('./src/routes/login');
 const dashboardRoutes = require('./src/service/dashboardService');
 const indexRoutes = require('./src/service/indexService');
 const exemplarRoutes = require('./src/routes/exemplarRoute');
+const compraRoute = require('./src/routes/compra')
 
 app.use('/exemplar', exemplarRoutes);
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
 app.use('/login', loginRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/compra', compraRoute);
 app.use('/', indexRoutes);
 
 const port = process.env.PORT || 3500;
