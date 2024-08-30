@@ -1,3 +1,6 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 const compra = async (req, res) =>{
     const user = req.session.user;
     const dados = req.body;
@@ -28,7 +31,7 @@ const compra = async (req, res) =>{
         
             await trx.transacao.create({
                 data: {
-                    clientId: user.id,
+                    clienteId: user.id,
                     livroId: exemplar.livroId,
                     estado: exemplar.estado,
                     data: new Date(),
@@ -38,6 +41,7 @@ const compra = async (req, res) =>{
         });
     } catch(e){
         res.status(400).send({ message: e.message });
+        return;
     }
 
     res.status(200).json({ message: 'Compra realizada com sucesso!' });
