@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { authPage } = require('../security/middlewares');
 
-router.get('/', authPage(["user", "admin"]). compraService.compra);
+router.get('/', authPage(["user", "admin"]), compraService.compra);
 
 
 module.exports = router;
