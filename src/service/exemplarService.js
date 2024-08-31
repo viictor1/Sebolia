@@ -2,7 +2,12 @@ const exemplarRepository = require('../repository/exemplarRepository');
 const livroRepository = require('../repository/livroRepository');
 
 const getAllExemplares = async (req, res) =>{
-    const exemplares = await exemplarRepository.getAllExemplares();
+    let exemplares = await exemplarRepository.getAllExemplares();
+    exemplares = await Promise.all(exemplares.map(async (exemplar) => {
+        exemplar.livroTitulo = (await livroRepository.getLivroById(exemplar.livroId)).titulo;
+        return exemplar;
+    }));
+    
     res.status(200).json(exemplares);
 }
 
@@ -18,6 +23,7 @@ const getExemplarUnico = async(req, res) =>{
         res.status(404).send({ error: 'Exemplar não encontrado' });
         return;
     }
+    
     res.send(exemplar);
 }
 
