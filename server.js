@@ -28,12 +28,14 @@ const cadastroRoutes = require('./src/routes/cadastro');
 const loginRoutes = require('./src/routes/login');
 const dashboardRoutes = require('./src/service/dashboardService');
 const indexRoutes = require('./src/service/indexService');
+const logoutRoutes = require('./src/routes/logout');
 
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
 app.use('/login', loginRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/', indexRoutes);
+app.use('/logout', logoutRoutes);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {

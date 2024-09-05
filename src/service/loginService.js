@@ -18,7 +18,7 @@ const createLogin = async (req, res) => {
         console.log(user);
         
         // Verifique se o usuário foi encontrado e se a senha está presente
-        if (user && user.senha && bcrypt.compareSync(senha, user.senha)) {
+        if (user && user.senha && bcrypt.compareSync(senha, user?.senha)) {
             console.log(req.body);
             // Se o usuário for encontrado e a senha estiver correta
             req.session.user = user; // Assumindo que você está usando sessões para autenticação
@@ -33,7 +33,22 @@ const createLogin = async (req, res) => {
     }
 };
 
+const logout = (req, res) => {
+    if (req.session.user) { 
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Erro ao fazer logout:', err);
+                return res.status(500).send('Erro ao fazer logout');
+            }
+            res.status(200).send('Logout efetuado com sucesso'); 
+        });
+    } else {
+        res.status(400).send('Nenhum usuário está logado'); 
+    }
+};
+
 module.exports = {
     getLogin,
-    createLogin
+    createLogin,
+    logout
 };
