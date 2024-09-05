@@ -6,7 +6,16 @@ const session = require('express-session');
 const cors = require('cors');
 
 app.use(cors({
-    origin: '*'
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+app.use(session({
+    secret: 's983245803oibf-rji',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false
+    }
 }));
 
 app.set('view engine', 'ejs');
@@ -15,13 +24,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use(session({
-    secret: 's983245803oibf-rji',
-    resave: false,
-    saveUninitialized: true,
-}));
 
-app.use(express.json());
 
 const livroRoutes = require('./src/routes/livro');
 const cadastroRoutes = require('./src/routes/cadastro');
@@ -29,7 +32,9 @@ const loginRoutes = require('./src/routes/login');
 const dashboardRoutes = require('./src/service/dashboardService');
 const indexRoutes = require('./src/service/indexService');
 const logoutRoutes = require('./src/routes/logout');
+const exemplarRoutes = require('./src/routes/exemplarRoute');
 
+app.use('/exemplar', exemplarRoutes);
 app.use('/livro', livroRoutes);
 app.use('/cadastro', cadastroRoutes);
 app.use('/login', loginRoutes);
