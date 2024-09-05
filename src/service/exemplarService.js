@@ -39,13 +39,20 @@ const createExemplar = async(req, res) =>{
     if(!validarExemplar(res, exemplar)){
         return;
     }
-
+    
     const livro = await livroRepository.getLivroById(exemplar.livroId);
+
     if(!livro){
         res.status(404).send({ error: 'Livro não encontrado' });
         return;
     }
 
+   let exemplarEditar = await exemplarRepository.getExemplarUnico(exemplar.livroId, exemplar.estado);
+   if(exemplarEditar){
+        exemplarEditar = await exemplarRepository.updateExemplar(exemplar.livroId, exemplar.estado, exemplar);
+        return res.status(200).json(exemplarEditar);
+   }
+   
    const exemplarSalvo = await exemplarRepository.createExemplar(exemplar);
 
    res.status(200).json(exemplarSalvo);

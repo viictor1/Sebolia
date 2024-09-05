@@ -54,8 +54,8 @@ const updateExemplar = async (id, estado, exemplar) => {
             }
         },
         data: {
-            preco: exemplar.preco,
-            quantidade: exemplar.quantidade,
+            preco: parseFloat(exemplar.preco),
+            quantidade: Number(exemplar.quantidade),
         }
     });
 }
