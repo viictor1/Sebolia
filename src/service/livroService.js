@@ -49,8 +49,8 @@ const deleteLivro = async (req, res) => {
         const livro = await livroRepository.deleteLivro(id);
         res.status(200).json({ message: `${livro.titulo} deletado com sucesso` });
     }
-    catch{
-        res.status(404).json({ message: "Livro não encontrado" })
+    catch(e){
+        res.status(404).json({ message: "Erro ao deletar" })
     }
 }
 
@@ -79,7 +79,7 @@ const updateLivro = async (req, res) => {
         res.status(200).json(livroAtualizado);
     }
     catch{
-        res.status(404).json({ message: "Livro não encontrado" })
+        res.status(404).json({ message: "Erro ao salvar" })
     }
 
 }

@@ -2,7 +2,13 @@ const exemplarRepository = require('../repository/exemplarRepository');
 const livroRepository = require('../repository/livroRepository');
 
 const getAllExemplares = async (req, res) =>{
-    let exemplares = await exemplarRepository.getAllExemplares();
+    const { livroId } = req.query;
+
+    if(!livroId){
+        res.status(400).json({ message: "Dados Incompletos" });
+    }
+
+    let exemplares = await exemplarRepository.getAllExemplares(livroId);
     exemplares = await Promise.all(exemplares.map(async (exemplar) => {
         exemplar.livroTitulo = (await livroRepository.getLivroById(exemplar.livroId)).titulo;
         return exemplar;
@@ -49,15 +55,15 @@ const deletarExemplar = async(req, res) =>{
     const { livroId, estado } = req.query;
 
     if(!livroId || !estado){
-        res.status(400).json({ message: "Dados Incompletos" });
+        return res.status(400).json({ message: "Dados Incompletos" });
     }
 
     try{
         await exemplarRepository.deleteExemplar(livroId, estado);
         res.status(200).json({ message: `Exemplar deletado com sucesso` });
     }
-    catch{
-        res.status(404).json({ message: "Exemplar não encontrado" })
+    catch(e){
+        res.status(404).json({ message: e.message })
     }
 }
 
