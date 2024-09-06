@@ -29,7 +29,8 @@ const getExemplarUnico = async(req, res) =>{
         res.status(404).send({ error: 'Exemplar não encontrado' });
         return;
     }
-    
+    exemplar.livroTitulo = (await livroRepository.getLivroById(exemplar.livroId)).titulo;
+
     res.send(exemplar);
 }
 
