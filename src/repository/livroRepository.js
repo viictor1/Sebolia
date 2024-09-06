@@ -8,7 +8,7 @@ const getAllLivros = async () => {
 
 const getLivroById = async (id)  => {
     return await prisma.livro.findUnique({
-        where: { id }
+        where: { id: Number(id) }
     });
 };
 
