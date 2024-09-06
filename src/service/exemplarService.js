@@ -2,7 +2,18 @@ const exemplarRepository = require('../repository/exemplarRepository');
 const livroRepository = require('../repository/livroRepository');
 
 const getAllExemplares = async (req, res) =>{
-    const exemplares = await exemplarRepository.getAllExemplares();
+    const { livroId } = req.query;
+
+    if(!livroId){
+        res.status(400).json({ message: "Dados Incompletos" });
+    }
+
+    let exemplares = await exemplarRepository.getAllExemplares(livroId);
+    exemplares = await Promise.all(exemplares.map(async (exemplar) => {
+        exemplar.livroTitulo = (await livroRepository.getLivroById(exemplar.livroId)).titulo;
+        return exemplar;
+    }));
+    
     res.status(200).json(exemplares);
 }
 
@@ -18,6 +29,7 @@ const getExemplarUnico = async(req, res) =>{
         res.status(404).send({ error: 'Exemplar não encontrado' });
         return;
     }
+    
     res.send(exemplar);
 }
 
@@ -27,13 +39,20 @@ const createExemplar = async(req, res) =>{
     if(!validarExemplar(res, exemplar)){
         return;
     }
-
+    
     const livro = await livroRepository.getLivroById(exemplar.livroId);
+
     if(!livro){
         res.status(404).send({ error: 'Livro não encontrado' });
         return;
     }
 
+   let exemplarEditar = await exemplarRepository.getExemplarUnico(exemplar.livroId, exemplar.estado);
+   if(exemplarEditar){
+        exemplarEditar = await exemplarRepository.updateExemplar(exemplar.livroId, exemplar.estado, exemplar);
+        return res.status(200).json(exemplarEditar);
+   }
+   
    const exemplarSalvo = await exemplarRepository.createExemplar(exemplar);
 
    res.status(200).json(exemplarSalvo);
@@ -43,15 +62,15 @@ const deletarExemplar = async(req, res) =>{
     const { livroId, estado } = req.query;
 
     if(!livroId || !estado){
-        res.status(400).json({ message: "Dados Incompletos" });
+        return res.status(400).json({ message: "Dados Incompletos" });
     }
 
     try{
         await exemplarRepository.deleteExemplar(livroId, estado);
         res.status(200).json({ message: `Exemplar deletado com sucesso` });
     }
-    catch{
-        res.status(404).json({ message: "Exemplar não encontrado" })
+    catch(e){
+        res.status(404).json({ message: e.message })
     }
 }
 

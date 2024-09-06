@@ -2,8 +2,12 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-const getAllExemplares = async () => {
-    return await prisma.exemplar.findMany();
+const getAllExemplares = async (id) => {
+    return await prisma.exemplar.findMany({
+        where: {
+            livroId: Number(id)
+        }
+    });
 }
 
 const getExemplarUnico = async (id, estado)  => {
@@ -21,10 +25,10 @@ const createExemplar = async (exemplar) => {
     return await prisma.exemplar.create({
         data: {
             estado: exemplar.estado,
-            preco: exemplar.preco,
-            quantidade: exemplar.quantidade,
+            preco: parseFloat(exemplar.preco),
+            quantidade: Number(exemplar.quantidade),
             Livro: {
-                connect: { id: exemplar.livroId }
+                connect: { id: Number(exemplar.livroId) }
             }
         }
     });
@@ -50,8 +54,8 @@ const updateExemplar = async (id, estado, exemplar) => {
             }
         },
         data: {
-            preco: exemplar.preco,
-            quantidade: exemplar.quantidade,
+            preco: parseFloat(exemplar.preco),
+            quantidade: Number(exemplar.quantidade),
         }
     });
 }
