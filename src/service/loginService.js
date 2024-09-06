@@ -25,11 +25,11 @@ const createLogin = async (req, res) => {
             res.redirect('/dashboard'); // Redirecionar para o dashboard ou página protegida
         } else {
             // Se o usuário não for encontrado ou a senha estiver incorreta
-            res.status(401).send('Usuário ou senha errados');
+            res.status(401).send({ message: 'Usuário ou senha errados'});
         }
     } catch (error) {
         console.error('Erro ao processar o login:', error);
-        res.status(500).send('Erro ao processar o login');
+        res.status(500).send({ message: 'Erro ao processar o login' });
     }
 };
 

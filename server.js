@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
 
-const livroRoutes = require('./src/routes/livro');
+const livroRoutes = require('./src/routes/livroRoute');
 const cadastroRoutes = require('./src/routes/cadastro');
 const loginRoutes = require('./src/routes/login');
 const dashboardRoutes = require('./src/service/dashboardService');
