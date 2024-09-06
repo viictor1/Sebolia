@@ -8,7 +8,7 @@ const getCadastro = async (username, cellphone) => {
         where: {
             OR:[
                 {usuario: username},
-                { celular: cellphone}
+                {celular: cellphone}
             ]
         }
     });

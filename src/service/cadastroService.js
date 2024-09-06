@@ -13,33 +13,34 @@ const getCadastro = (req, res) => {
 
 // Rota para processar o formulário de cadastro
 const createCadastro = async (req, res) => {
-    const { username, password, confirmationPassword, cellphone } = req.body;
-    if(!password || password.length < 6){
+    const { usuario, senha, confirmarSenha, telefone } = req.body;
+    console.log(req.body);
+    if(!senha || senha.length < 6){
         return res.status(400).render('cadastro',{
             error: 'A senha deve ter no minimo 6 caracteres',
-            username,
-            cellphone
-
+            usuario,
+            telefone
+            
         });
     }
-    if(!username || username.length < 4){
+    if(!usuario || usuario.length < 4){
         return res.status(400).render('cadastro',{
             error: 'o usuario deve ter no minimo 4 caracteres',
-            username,
-            cellphone
+            usuario,
+            telefone
         });
     }
-    if(password != confirmationPassword){
+    if(senha != confirmarSenha){
         return res.render('cadastro', {
             error: 'As senhas devem ser iguais',
-            username,
-            cellphone
+            usuario,
+            telefone
         });
     }
-
+    
     try {
         // Verificar se o nome de usuário já existe
-        const existingUser = await cadastroRepository.getCadastro(username, cellphone);
+        const existingUser = await cadastroRepository.getCadastro(usuario, telefone);
 
         console.log("Existing User:", existingUser); // Verifique o valor retornado
 
@@ -47,36 +48,32 @@ const createCadastro = async (req, res) => {
             // Se o usuário já existe, renderizar o formulário novamente com uma mensagem de erro
             return res.status(400).render('cadastro', {
                 error: 'Nome de usuário ou telefone já existe',
-                username,
-                cellphone
+                usuario,
+                telefone
             });
         }
 
 
         // Hash da senha antes de salvar no banco de dados
-        const hashedPassword = bcrypt.hashSync(password, 8);
+        const hashedPassword = bcrypt.hashSync(senha, 8);
 
         // Criar um novo cliente no banco de dados
         const clienteSalvo = await cadastroRepository.createCadastro(
             {
-                usuario: username,
+                nome: this.name,
+                usuario: usuario,
                 senha: hashedPassword,
-                celular: cellphone
+                celular: telefone
             }
-        )
-        //     data: {
-        //         usuario: username,
-        //         senha: hashedPassword,
-        //         celular: cellphone
-        //     }
-        // });
+        );
+
         console.log("Cliente salvo com sucesso:", clienteSalvo);
 
         // Redirecionar para a página de login
         res.redirect('/login');
     } catch (error) {
         console.error("Erro ao processar o cadastro:", error);
-        res.status(500).render('cadastro', { error: 'Erro ao processar o cadastro', username, cellphone });
+        res.status(500).render('cadastro', { error: 'Erro ao processar o cadastro', usuario, telefone });
     }
 };
 
@@ -104,7 +101,7 @@ const deleteCadastro = async (req,res) => {
 
 const updateCadastro = async (req, res) => {
     const { id } = req.params;
-    const { username, password, cellphone } = req.body;
+    const { usuario, password, telefone } = req.body;
 
     if(isNaN(id)){
         res.status(400).json({message: 'ID inválido'});
@@ -114,12 +111,12 @@ const updateCadastro = async (req, res) => {
     try {
         // Hash da nova senha, se fornecida
         let updatedData = {
-            usuario: username,
-            celular: cellphone,
+            usuario: usuario,
+            celular: telefone,
         };
 
-        if (password) {
-            updatedData.senha = bcrypt.hashSync(password, 8);
+        if (senha) {
+            updatedData.senha = bcrypt.hashSync(senha, 8);
         }
 
         // Atualiza o cliente no banco de dados
@@ -127,9 +124,9 @@ const updateCadastro = async (req, res) => {
             id,
             {
                 nome: this.name,
-                usuario: username,
-                senha: password,
-                celular: cellphone
+                usuario: usuario,
+                senha: senha,
+                celular: telefone
             }
             
             // where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
