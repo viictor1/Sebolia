@@ -95,6 +95,19 @@ describe('compra function', () => {
           where: { id: 1 }
         }));
 
+        expect(prismaMock.exemplar.update).toHaveBeenCalledWith(
+          expect.objectContaining({ 
+            data: {
+              quantidade: 0
+          },
+          where: {
+              livroId_estado: {
+                  livroId: "123",
+                  estado: 'Novo'
+              }
+          }
+        }));
+
         expect(prismaMock.livro.findUnique).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
