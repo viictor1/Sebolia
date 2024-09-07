@@ -1,5 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { getPrisma } = require("../infra/prismaClient");
+
+const prisma = getPrisma();
 
 const compra = async (req, res) =>{
     const user = req.session.user;

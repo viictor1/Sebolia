@@ -1,7 +1,7 @@
 const cadastroRepository = require("../src/repository/cadastroRepository");
-const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { getPrisma } = require("../infra/prismaClient");
+
+const prisma = getPrisma();
 
 async function main() {
 
