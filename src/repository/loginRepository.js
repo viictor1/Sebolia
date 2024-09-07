@@ -1,6 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+const { getPrisma } = require("../infra/prismaClient");
 
-const prisma = new PrismaClient();
+const prisma = getPrisma();
 
 const getLogin = async (username) => {
     return await prisma.cliente.findFirst({

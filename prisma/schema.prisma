@@ -35,4 +35,15 @@ model Cliente {
   senha   String
   celular String
   role    String @default("user")
+  saldo   Float  @default(0)
+}
+
+model Transacao {
+  id          Int       @id @default(autoincrement())
+  clienteId   Int
+  livroId     Int
+  tituloLivro String
+  estado      String
+  data        DateTime  @default(now())
+  tipo        String
 }
