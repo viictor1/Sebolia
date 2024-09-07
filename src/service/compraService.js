@@ -30,8 +30,18 @@ const compra = async (req, res) =>{
                 data: { saldo: user.saldo - exemplar.preco }
             });
 
+            await trx.exemplar.update({
+                data: { quantidade: exemplar.quantidade - 1},
+                where: {
+                    livroId_estado: {
+                        livroId: dados.livroId,
+                        estado: dados.estado
+                    }
+                }
+            })
+
             exemplar.tituloLivro = (await trx.livro.findUnique({ where: { id: exemplar.livroId }})).titulo;
-        
+
             await trx.transacao.create({
                 data: {
                     clienteId: user.id,
@@ -44,6 +54,7 @@ const compra = async (req, res) =>{
             });
         });
     } catch(e){
+        console.log(e.message)
         res.status(400).send({ message: e.message });
         return;
     }
