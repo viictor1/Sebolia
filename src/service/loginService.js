@@ -15,11 +15,9 @@ const createLogin = async (req, res) => {
     try {
         // Buscar o usuário no banco de dados
         const user = await loginRepository.getLogin(usuario);
-        console.log(user);
         
         // Verifique se o usuário foi encontrado e se a senha está presente
         if (user && user.senha && bcrypt.compareSync(senha, user?.senha)) {
-            console.log(req.body);
             // Se o usuário for encontrado e a senha estiver correta
             req.session.user = user; // Assumindo que você está usando sessões para autenticação
             res.redirect('/dashboard'); // Redirecionar para o dashboard ou página protegida

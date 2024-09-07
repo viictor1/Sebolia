@@ -28,11 +28,14 @@ const compra = async (req, res) =>{
                 where: { id: user.id },
                 data: { saldo: user.saldo - exemplar.preco }
             });
+
+            exemplar.tituloLivro = (await trx.livro.findUnique({ where: { id: exemplar.livroId }})).titulo;
         
             await trx.transacao.create({
                 data: {
                     clienteId: user.id,
                     livroId: exemplar.livroId,
+                    tituloLivro: exemplar.tituloLivro,
                     estado: exemplar.estado,
                     data: new Date(),
                     tipo: "Compra"

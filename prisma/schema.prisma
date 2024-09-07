@@ -39,10 +39,11 @@ model Cliente {
 }
 
 model Transacao {
-  id         Int       @id @default(autoincrement())
-  clienteId  Int
-  livroId    Int
-  estado     String
-  data       DateTime  @default(now())
-  tipo       String
+  id          Int       @id @default(autoincrement())
+  clienteId   Int
+  livroId     Int
+  tituloLivro String
+  estado      String
+  data        DateTime  @default(now())
+  tipo        String
 }
