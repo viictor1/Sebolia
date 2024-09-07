@@ -33,7 +33,8 @@ const dashboardRoutes = require('./src/service/dashboardService');
 const indexRoutes = require('./src/service/indexService');
 const logoutRoutes = require('./src/routes/logout');
 const exemplarRoutes = require('./src/routes/exemplarRoute');
-const compraRoute = require('./src/routes/compra')
+const compraRoute = require('./src/routes/compra');
+const vendaRoute = require('./src/routes/venda');
 
 app.use('/exemplar', exemplarRoutes);
 app.use('/livro', livroRoutes);
@@ -41,8 +42,9 @@ app.use('/cadastro', cadastroRoutes);
 app.use('/login', loginRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/compra', compraRoute);
-app.use('/', indexRoutes);
+app.use('/venda', vendaRoute);
 app.use('/logout', logoutRoutes);
+app.use('/', indexRoutes);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {
