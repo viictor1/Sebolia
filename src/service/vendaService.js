@@ -9,6 +9,9 @@ const venda = async (req, res) =>{
 
     try{
         await prisma.$transaction(async (trx) => {
+            if(!dados || !dados.livroId || !dados.estado){
+                throw new Error("Dados inválidos!");
+            }
             const exemplar = await trx.exemplar.findUnique({
                 where: {
                     livroId_estado: {
