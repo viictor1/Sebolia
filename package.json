@@ -8,8 +8,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node node_modules/jest/bin/jest.js",
-    "dev": "prisma generate --no-hints && nodemon server.js",
-    "start": "prisma generate --no-hints && nodemon server.js"
+    "dev": "prisma db push && nodemon server.js",
+    "start": "prisma db push && nodemon server.js"
   },
   "author": "",
   "license": "ISC",
