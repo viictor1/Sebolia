@@ -95,6 +95,19 @@ describe('compra function', () => {
           where: { id: 1 }
         }));
 
+        expect(prismaMock.exemplar.update).toHaveBeenCalledWith(
+          expect.objectContaining({ 
+            data: {
+              quantidade: 0
+          },
+          where: {
+              livroId_estado: {
+                  livroId: "123",
+                  estado: 'Novo'
+              }
+          }
+        }));
+
         expect(prismaMock.livro.findUnique).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
@@ -172,6 +185,25 @@ describe('compra function', () => {
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.send).toHaveBeenCalledWith({ message: 'Sem estoque' });
+    });
+  });
+
+  describe('dados invalidos', () => {
+    beforeEach(() => {
+    });
+
+    it('deve retornar uma mensagem de dados invalidos', async () => {
+      await compra(req, res);
+
+      expect(prismaMock.$transaction).toHaveBeenCalled();
+      expect(prismaMock.exemplar.findUnique).not.toHaveBeenCalled();
+
+      expect(prismaMock.cliente.update).not.toHaveBeenCalled();
+      expect(prismaMock.exemplar.update).not.toHaveBeenCalled();
+      expect(prismaMock.transacao.create).not.toHaveBeenCalled();
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ message: 'Dados inválidos!' });
     });
   });
 });
