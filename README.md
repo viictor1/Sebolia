@@ -6,6 +6,10 @@ Backend do Sebolia, sistema para gerenciamento de um Sebo, em que é possível s
 
 - [frontend](https://github.com/BorniaPedro/sebolia-frontend)
 
+# Padrão de Projeto
+
+O padrão de proejto implementado foi o Singleton, utilizamos ele para criar apenas uma instância do Prisma
+
 
 # Instalação
 
