@@ -35,6 +35,7 @@ const logoutRoutes = require('./src/routes/logout');
 const exemplarRoutes = require('./src/routes/exemplarRoute');
 const compraRoute = require('./src/routes/compra');
 const vendaRoute = require('./src/routes/venda');
+const historicoRoute = require('./src/routes/historico');
 const perfilRoutes = require('./src/routes/perfil');
 
 app.use('/exemplar', exemplarRoutes);
@@ -45,6 +46,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/compra', compraRoute);
 app.use('/venda', vendaRoute);
 app.use('/logout', logoutRoutes);
+app.use('/historico', historicoRoute);
 app.use('/perfil', perfilRoutes);
 app.use('/', indexRoutes);
 

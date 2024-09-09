@@ -125,6 +125,7 @@ describe('compra function', () => {
                 estado: 'Novo',
                 data: expect.any(Date),
                 tipo: 'Compra',
+                preco: 50
             }
           })
         );

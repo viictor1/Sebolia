@@ -29,10 +29,11 @@ const compra = async (req, res) =>{
                 throw new Error('Sem estoque');
             }
         
-            await trx.cliente.update({
+            const cliente = await trx.cliente.update({
                 where: { id: user.id },
                 data: { saldo: user.saldo - exemplar.preco }
             });
+            req.session.user = cliente;
 
             await trx.exemplar.update({
                 data: { quantidade: exemplar.quantidade - 1},
@@ -53,7 +54,8 @@ const compra = async (req, res) =>{
                     tituloLivro: exemplar.tituloLivro,
                     estado: exemplar.estado,
                     data: new Date(),
-                    tipo: "Compra"
+                    tipo: "Compra",
+                    preco: exemplar.preco
                 }
             });
         });
