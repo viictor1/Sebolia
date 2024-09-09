@@ -3,11 +3,16 @@ const loginRepository = require('../repository/loginRepository');
 
 
 const getLogin = (req,res)=>{
-    res.render('login', {
-        erro: '',
-        usuario: '',
-        cellphone: ''
-    });
+
+    if(req.session && req.session.user){
+        console.log(req.session.user);
+        res.json({
+            usuario: req.session.user.usuario,
+            telefone: req.session.user.celular
+        });
+    } else{
+        res.status(401).send('Usuário não autenticado');
+    }
 };
 
 const createLogin = async (req, res) => {

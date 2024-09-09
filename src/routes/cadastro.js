@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', cadastroService.getCadastro);
 router.post('/', cadastroService.createCadastro);
-router.put('/:id', cadastroService.updateCadastro);
+router.put('/', cadastroService.updateCadastro);
 router.delete('/:id', cadastroService.deleteCadastro);
 
 module.exports = router;

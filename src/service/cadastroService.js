@@ -100,38 +100,23 @@ const deleteCadastro = async (req,res) => {
 };
 
 const updateCadastro = async (req, res) => {
-    const { id } = req.params;
-    const { usuario, password, telefone } = req.body;
+    const { usuario, celular } = req.body;
+    const user = req.session.user;
 
-    if(isNaN(id)){
-        res.status(400).json({message: 'ID inválido'});
-        return;
+    if(!usuario || !celular){
+        return res.status(400).json({message: 'usuario e celular sao obrigatorios'});
     }
 
     try {
-        // Hash da nova senha, se fornecida
-        let updatedData = {
-            usuario: usuario,
-            celular: telefone,
-        };
-
-        if (senha) {
-            updatedData.senha = bcrypt.hashSync(senha, 8);
-        }
-
-        // Atualiza o cliente no banco de dados
         const clienteAtualizado = await cadastroRepository.updateCadastro(
-            id,
+            user.id,
             {
-                nome: this.name,
                 usuario: usuario,
-                senha: senha,
-                celular: telefone
+                celular: celular
             }
             
-            // where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
-            // data: updatedData,
         );
+        req.session.user = clienteAtualizado;
 
         res.json({ message: 'Cliente atualizado com sucesso', clienteAtualizado });
     } catch (error) {
