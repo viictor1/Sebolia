@@ -41,12 +41,14 @@ const logout = (req, res) => {
         req.session.destroy((err) => {
             if (err) {
                 console.error('Erro ao fazer logout:', err);
-                return res.status(500).send('Erro ao fazer logout');
+                return res.status(500).json({message:'Erro ao fazer logout'});
             }
-            res.status(200).send('Logout efetuado com sucesso'); 
+            res.status(200).json({
+                message: "Logou realizado com sucesso!"
+            }); 
         });
     } else {
-        res.status(400).send('Nenhum usuário está logado'); 
+        res.status(400).json({message:'Nenhum usuário está logado'}); 
     }
 };
 
