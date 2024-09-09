@@ -1,5 +1,5 @@
 const cadastroRepository = require("../src/repository/cadastroRepository");
-const { getPrisma } = require("../infra/prismaClient");
+const { getPrisma } = require("../src/infra/prismaClient");
 
 const prisma = getPrisma();
 
