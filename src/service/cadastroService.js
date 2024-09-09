@@ -93,7 +93,11 @@ const updateCadastro = async (req, res) => {
     const user = req.session.user;
 
     if(!usuario || !celular){
-        return res.status(400).json({message: 'usuario e celular sao obrigatorios'});
+        return res.status(400).json({message: 'Usuário e celular são obrigatórios'});
+    }
+    
+    if(usuario.length < 6 || celular.length < 11 ){
+        return res.status(400).json({message: 'Usuário ou telefone inválido'});
     }
 
     try {
@@ -118,7 +122,12 @@ const alterarSenha = async (req, res) => {
     const { senhaAntiga, senhaNova } = req.body;
     try {
         // Buscar o usuário no banco de dados
-        const user = req.session.user
+        const user = req.session.user;
+        
+        if(senhaNova.length < 6) {
+            return res.status(401).json({ message: "A senha precisa ter no mínimo 6 dígitos" })
+        }
+        
         
         // Verifique se o usuário foi encontrado e se a senha está presente
         if (senhaAntiga && senhaNova && bcrypt.compareSync(senhaAntiga, user?.senha)) {
@@ -129,14 +138,14 @@ const alterarSenha = async (req, res) => {
                 }
             )
             req.session.user = clienteAtualizado; 
-            res.status(200).send({ message: 'Senha atualizada com sucesso!'});
+            return res.status(200).send({ message: 'Senha atualizada com sucesso!'});
         } else {
             // Se o usuário não for encontrado ou a senha estiver incorreta
-            res.status(401).send({ message: 'Usuário ou senha errados'});
+            return res.status(401).send({ message: 'Usuário ou senha errados'});
         }
     } catch (error) {
         console.error('Erro ao processar o login:', error);
-        res.status(500).send({ message: 'Erro ao processar o login' });
+        return res.status(500).send({ message: 'Erro ao processar o login' });
     }
 };
 
