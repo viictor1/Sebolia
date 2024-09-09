@@ -28,7 +28,7 @@ git clone https://github.com/BorniaPedro/sebolia-frontend.git
 2. Navegue até o diretório do projeto:
 
 ```bash
-cd sebolia-frontend
+cd sebolia
 ```
 
 3. Buildar a imagem
