@@ -1,5 +1,6 @@
 # Sebolia Backend
-    Backend do Sebolia, sistema para gerenciamento de um Sebo, em que é possível se registrar, gerenciar sua conta, comprar e vender livros
+
+Backend do Sebolia, sistema para gerenciamento de um Sebo, em que é possível se registrar, gerenciar sua conta, comprar e vender livros
 
 # Sebolia Frontend
 
