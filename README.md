@@ -22,7 +22,7 @@ Siga os passos abaixo para rodar o projeto localmente:
 1. Clone o repositório
 
 ```bash
-git clone https://github.com/BorniaPedro/sebolia-frontend.git
+git clone https://github.com/viictor1/Sebolia.git
 ```
 
 2. Navegue até o diretório do projeto:
