@@ -35,6 +35,7 @@ const logoutRoutes = require('./src/routes/logout');
 const exemplarRoutes = require('./src/routes/exemplarRoute');
 const compraRoute = require('./src/routes/compra');
 const vendaRoute = require('./src/routes/venda');
+const historicoRoute = require('./src/routes/historico');
 
 app.use('/exemplar', exemplarRoutes);
 app.use('/livro', livroRoutes);
@@ -44,6 +45,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/compra', compraRoute);
 app.use('/venda', vendaRoute);
 app.use('/logout', logoutRoutes);
+app.use('/historico', historicoRoute);
 app.use('/', indexRoutes);
 
 const port = process.env.PORT || 3500;

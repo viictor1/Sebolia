@@ -53,7 +53,8 @@ const compra = async (req, res) =>{
                     tituloLivro: exemplar.tituloLivro,
                     estado: exemplar.estado,
                     data: new Date(),
-                    tipo: "Compra"
+                    tipo: "Compra",
+                    preco: exemplar.preco
                 }
             });
         });
