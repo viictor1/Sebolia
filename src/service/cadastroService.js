@@ -14,27 +14,20 @@ const getCadastro = (req, res) => {
 // Rota para processar o formulário de cadastro
 const createCadastro = async (req, res) => {
     const { usuario, senha, confirmarSenha, telefone } = req.body;
-    console.log(req.body);
+
     if(!senha || senha.length < 6){
-        return res.status(400).render('cadastro',{
-            error: 'A senha deve ter no minimo 6 caracteres',
-            usuario,
-            telefone
-            
+        return res.status(400).json({
+            message: 'A senha deve ter no minimo 6 caracteres',    
         });
     }
     if(!usuario || usuario.length < 4){
-        return res.status(400).render('cadastro',{
-            error: 'o usuario deve ter no minimo 4 caracteres',
-            usuario,
-            telefone
+        return res.status(400).json({
+            message: 'o usuario deve ter no minimo 4 caracteres',
         });
     }
     if(senha != confirmarSenha){
-        return res.render('cadastro', {
-            error: 'As senhas devem ser iguais',
-            usuario,
-            telefone
+        return res.status(400).json({
+            messgae: 'As senhas devem ser iguais',
         });
     }
     
@@ -46,10 +39,8 @@ const createCadastro = async (req, res) => {
 
         if (existingUser) {
             // Se o usuário já existe, renderizar o formulário novamente com uma mensagem de erro
-            return res.status(400).render('cadastro', {
-                error: 'Nome de usuário ou telefone já existe',
-                usuario,
-                telefone
+            return res.status(400).json({
+                message: 'Nome de usuário ou telefone já existe',
             });
         }
 
@@ -67,22 +58,20 @@ const createCadastro = async (req, res) => {
             }
         );
 
-        console.log("Cliente salvo com sucesso:", clienteSalvo);
+        res.status(200).json({ message: "Cliente salvo com sucesso:" })
 
         // Redirecionar para a página de login
-        res.redirect('/login');
     } catch (error) {
-        console.error("Erro ao processar o cadastro:", error);
-        res.status(500).render('cadastro', { error: 'Erro ao processar o cadastro', usuario, telefone });
+        console.log("oii")
+        res.status(500).json({ message: "Erro ao processar o cadastro" })
     }
 };
 
 const deleteCadastro = async (req,res) => {
-    const { id } = req.params;
+    const user = req.session.user;
 
     try{
-        const cliente = cadastroRepository.deleteCadastro(id);
-        res.status(200).json({message: `${cliente.nome} deletado com sucesso`});
+        const cliente = cadastroRepository.deleteCadastro(user.id);
         //     where:{
         //         id: parseInt(id)
         //     }
@@ -90,7 +79,7 @@ const deleteCadastro = async (req,res) => {
         if(!cliente){
             return res.status(404).json({message: 'cliente nao encontrado'});
         }
-        res.status(200).json({message: 'cliente deletado com sucesso'});
+        res.status(200).json({message: `${cliente.nome} deletado com sucesso`});
         
     } catch(error){
         
@@ -100,45 +89,76 @@ const deleteCadastro = async (req,res) => {
 };
 
 const updateCadastro = async (req, res) => {
-    const { id } = req.params;
-    const { usuario, password, telefone } = req.body;
+    const { usuario, celular } = req.body;
+    const user = req.session.user;
 
-    if(isNaN(id)){
-        res.status(400).json({message: 'ID inválido'});
-        return;
+    if(!usuario || !celular){
+        return res.status(400).json({message: 'usuario e celular sao obrigatorios'});
     }
 
     try {
-        // Hash da nova senha, se fornecida
-        let updatedData = {
-            usuario: usuario,
-            celular: telefone,
-        };
-
-        if (senha) {
-            updatedData.senha = bcrypt.hashSync(senha, 8);
-        }
-
-        // Atualiza o cliente no banco de dados
         const clienteAtualizado = await cadastroRepository.updateCadastro(
-            id,
+            user.id,
             {
-                nome: this.name,
                 usuario: usuario,
-                senha: senha,
-                celular: telefone
+                celular: celular
             }
             
-            // where: { id: parseInt(id) },  // Certifique-se de converter o id para inteiro
-            // data: updatedData,
         );
+        req.session.user = clienteAtualizado;
 
-        res.json({ message: 'Cliente atualizado com sucesso', clienteAtualizado });
+        res.status(200).json({ message: 'Cliente atualizado com sucesso', clienteAtualizado });
     } catch (error) {
         console.error('Erro ao atualizar o cliente:', error);
         res.status(500).json({ message: 'Erro ao atualizar o cliente' });
     }
 };
+
+const alterarSenha = async (req, res) => {
+    const { senhaAntiga, senhaNova } = req.body;
+    try {
+        // Buscar o usuário no banco de dados
+        const user = req.session.user
+        
+        // Verifique se o usuário foi encontrado e se a senha está presente
+        if (senhaAntiga && senhaNova && bcrypt.compareSync(senhaAntiga, user?.senha)) {
+            const clienteAtualizado = await cadastroRepository.updateCadastro(
+                user.id,
+                {
+                    senha: bcrypt.hashSync(senhaNova, 8)
+                }
+            )
+            req.session.user = clienteAtualizado; 
+            res.status(200).send({ message: 'Senha atualizada com sucesso!'});
+        } else {
+            // Se o usuário não for encontrado ou a senha estiver incorreta
+            res.status(401).send({ message: 'Usuário ou senha errados'});
+        }
+    } catch (error) {
+        console.error('Erro ao processar o login:', error);
+        res.status(500).send({ message: 'Erro ao processar o login' });
+    }
+};
+
+const adicionarSaldo = async (req, res) => {
+    const { saldo } = req.body;
+    let user = req.session.user
+    try {
+        user = await cadastroRepository.updateCadastro(
+            user.id,
+            {
+                saldo: Number(user.saldo) + Number(saldo)
+            }
+            
+        );
+        req.session.user = user;
+        
+        res.status(200).json({ message: 'Saldo adicionado com sucesso' });
+    } catch (error) {
+        console.error('Erro ao adicionar saldo:', error);
+        res.status(500).json({ message: 'Erro ao adicionar saldo' });
+    }
+}
 
 
 
@@ -146,5 +166,7 @@ module.exports = {
     getCadastro,
     createCadastro,
     deleteCadastro,
-    updateCadastro
+    updateCadastro,
+    alterarSenha,
+    adicionarSaldo
 };

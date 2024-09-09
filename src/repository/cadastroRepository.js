@@ -21,7 +21,7 @@ const createCadastro = async (cadastroData) => {
 
 const updateCadastro = async (id, cadastroAtualizar) => {
     return await prisma.cliente.update({
-        where: { id: parseInt(id) },
+        where: { id: Number(id) },
         data: cadastroAtualizar
     });
 };
