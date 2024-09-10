@@ -30,6 +30,12 @@ const createCadastro = async (req, res) => {
             messgae: 'As senhas devem ser iguais',
         });
     }
+
+    if(telefone.length != 11 || isNaN(telefone)){
+        return res.status(400).json({
+            message: 'Telefone inválido'
+        });
+    }
     
     try {
         // Verificar se o nome de usuário já existe
@@ -96,7 +102,7 @@ const updateCadastro = async (req, res) => {
         return res.status(400).json({message: 'Usuário e celular são obrigatórios'});
     }
     
-    if(usuario.length < 6 || celular.length < 11 ){
+    if(usuario.length < 4 || celular.length != 11 || isNaN(celular)){
         return res.status(400).json({message: 'Usuário ou telefone inválido'});
     }
 
@@ -153,9 +159,6 @@ const adicionarSaldo = async (req, res) => {
     const { saldo } = req.body;
     let user = req.session.user
     try {
-        if(saldo > 100) {
-            return res.status(500).json({ message: 'Só é possível adicionar 100 de cada vez' });  
-        } 
         user = await cadastroRepository.updateCadastro(
             user.id,
             {
