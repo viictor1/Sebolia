@@ -96,22 +96,38 @@ const validarLivro = (res, livro) =>{
         return false;
     }
 
+    if(livro.titulo.length > 50){
+        res.status(400).json({ message: 'Título não deve ultrapassar 50 caracteres' });
+        return false;
+    }
+
     if(!livro.autor){
         res.status(400).json({ message: 'Autor Inválido' });
         return false;
     }
 
-    if(!livro.editora){
-        res.status(400).json({ message: 'Editora Inválido' });
+    if(livro.autor.length > 50){
+        res.status(400).json({ message: 'Autor não deve ultrapassar 50 caracteres' });
         return false;
     }
-
+    
     livro.ano = parseInt(livro.ano);
 
-    if(!livro.ano || typeof(livro.ano) != "number"){
+    if(!livro.ano || typeof(livro.ano) != "number" || livro.ano > new Date().getFullYear()){
         res.status(400).json({ message: 'Ano Inválido' });
         return false;
     }
+
+    if(!livro.editora){
+        res.status(400).json({ message: 'Editora Inválida' });
+        return false;
+    }
+
+    if(livro.editora.length > 50){
+        res.status(400).json({ message: 'Editora não deve ultrapassar 50 caracteres' });
+        return false;
+    }
+
 
     return true;
 }
