@@ -157,7 +157,10 @@ const alterarSenha = async (req, res) => {
 
 const adicionarSaldo = async (req, res) => {
     const { saldo } = req.body;
-    let user = req.session.user
+    let user = req.session.user;
+    if(saldo > 100) {
+        return res.status(400).json({ message: 'Não é possível adicionar mais de 100 de uma vez' });
+    }
     try {
         user = await cadastroRepository.updateCadastro(
             user.id,
