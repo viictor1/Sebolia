@@ -153,6 +153,9 @@ const adicionarSaldo = async (req, res) => {
     const { saldo } = req.body;
     let user = req.session.user
     try {
+        if(saldo > 100) {
+            return res.status(500).json({ message: 'Só é possível adicionar 100 de cada vez' });  
+        } 
         user = await cadastroRepository.updateCadastro(
             user.id,
             {
