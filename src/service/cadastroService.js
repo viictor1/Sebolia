@@ -15,19 +15,19 @@ const getCadastro = (req, res) => {
 const createCadastro = async (req, res) => {
     const { usuario, senha, confirmarSenha, telefone } = req.body;
 
-    if(!senha || senha.length < 6){
+    if(!usuario || usuario.length < 4 || usuario.length > 50){
         return res.status(400).json({
-            message: 'A senha deve ter no minimo 6 caracteres',    
+            message: 'o usuario deve ter entre 4 e 50 caracteres',
         });
     }
-    if(!usuario || usuario.length < 4){
+    if(!senha || senha.length < 6 || senha.length > 20){
         return res.status(400).json({
-            message: 'o usuario deve ter no minimo 4 caracteres',
+            message: 'A senha deve ter entre 6 e 20 caracteres',    
         });
     }
-    if(senha != confirmarSenha){
+    if(!confirmarSenha || senha != confirmarSenha){
         return res.status(400).json({
-            messgae: 'As senhas devem ser iguais',
+            message: 'As senhas devem ser iguais',
         });
     }
 
@@ -101,9 +101,14 @@ const updateCadastro = async (req, res) => {
     if(!usuario || !celular){
         return res.status(400).json({message: 'Usuário e celular são obrigatórios'});
     }
+
+    if(usuario.length < 4 || usuario.length > 50){
+        return res.status(400).json({message: 'O nome de usuário precisa ter entre 4 e 50 caracteres'});
+
+    }
     
-    if(usuario.length < 4 || celular.length != 11 || isNaN(celular)){
-        return res.status(400).json({message: 'Usuário ou telefone inválido'});
+    if(celular.length != 11 || isNaN(celular)){
+        return res.status(400).json({message: 'Telefone precisa ter 11 dígitos'});
     }
 
     try {
@@ -133,6 +138,10 @@ const alterarSenha = async (req, res) => {
         if(senhaNova.length < 6) {
             return res.status(401).json({ message: "A senha precisa ter no mínimo 6 dígitos" })
         }
+
+        if(senhaNova.length > 20) {
+            return res.status(401).json({ message: "A senha precisa ter no máximo 20 dígitos" })
+        }
         
         
         // Verifique se o usuário foi encontrado e se a senha está presente
@@ -147,7 +156,7 @@ const alterarSenha = async (req, res) => {
             return res.status(200).send({ message: 'Senha atualizada com sucesso!'});
         } else {
             // Se o usuário não for encontrado ou a senha estiver incorreta
-            return res.status(401).send({ message: 'Usuário ou senha errados'});
+            return res.status(401).send({ message: 'Senha Incorreta'});
         }
     } catch (error) {
         console.error('Erro ao processar o login:', error);

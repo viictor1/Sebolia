@@ -17,6 +17,18 @@ const getLogin = (req,res)=>{
 
 const createLogin = async (req, res) => {
     const { usuario, senha } = req.body;
+    if(!usuario || usuario.length < 4 || usuario.length > 50){
+        return res.status(400).json({
+            message: 'Usuário inválido',
+        });
+    }
+
+    if(!senha || senha.length < 6 || senha.length > 20){
+        return res.status(400).json({
+            message: 'Senha inválida',    
+        });
+    }
+
     try {
         // Buscar o usuário no banco de dados
         const user = await loginRepository.getLogin(usuario);
