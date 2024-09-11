@@ -22,6 +22,9 @@ const getExemplarUnico = async (id, estado)  => {
 };
 
 const createExemplar = async (exemplar) => {
+    console.log(exemplar.preco)
+    console.log(parseFloat(exemplar.preco))
+
     return await prisma.exemplar.create({
         data: {
             estado: exemplar.estado,
@@ -46,6 +49,8 @@ const deleteExemplar = async (id, estado) => {
 }
 
 const updateExemplar = async (id, estado, exemplar) => {
+    console.log(exemplar.preco)
+    console.log(parseFloat(exemplar.preco))
     return await prisma.exemplar.update({
         where: {
             livroId_estado: {

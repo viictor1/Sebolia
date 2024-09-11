@@ -6,6 +6,10 @@ Backend do Sebolia, sistema para gerenciamento de um Sebo, em que é possível s
 
 - [frontend](https://github.com/BorniaPedro/sebolia-frontend)
 
+# Padrão de Projeto
+
+O padrão de proejto implementado foi o Singleton, utilizamos ele para criar apenas uma instância do Prisma
+
 
 # Instalação
 
@@ -22,13 +26,13 @@ Siga os passos abaixo para rodar o projeto localmente:
 1. Clone o repositório
 
 ```bash
-git clone https://github.com/BorniaPedro/sebolia-frontend.git
+git clone https://github.com/viictor1/Sebolia.git
 ```
 
 2. Navegue até o diretório do projeto:
 
 ```bash
-cd sebolia-frontend
+cd sebolia
 ```
 
 3. Buildar a imagem
