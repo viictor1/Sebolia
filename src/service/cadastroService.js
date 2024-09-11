@@ -77,11 +77,12 @@ const deleteCadastro = async (req,res) => {
     const user = req.session.user;
 
     try{
+        const { senha } = req.body;
         const cliente = cadastroRepository.deleteCadastro(user.id);
-        //     where:{
-        //         id: parseInt(id)
-        //     }
-        // });
+        if(!bcrypt.compareSync(senha, user?.senha)){
+
+            return res.status(400).json({message: 'Senha incorreta'});
+        }
         if(!cliente){
             return res.status(404).json({message: 'cliente nao encontrado'});
         }
