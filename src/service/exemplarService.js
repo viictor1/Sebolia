@@ -131,13 +131,28 @@ const validarExemplar = (res, exemplar) =>{
         return false;
     }
 
+    if(!exemplar.quantidade){
+        res.status(400).json({ message: 'Quantidade Inválida' });
+        return false;
+    }
+
+    if(exemplar.quantidade > 1000){
+        res.status(400).json({ message: 'Quantidade não pode ultrapassar 1000' });
+        return false;
+    }
+
+    if(exemplar.preco > 1000.00){
+        res.status(400).json({ message: 'Preço não pode ultrapassar R$ 1000,00' });
+        return false;
+    }
+
     if(!exemplar.preco){
         res.status(400).json({ message: 'Preço Inválido' });
         return false;
     }
 
-    if(!exemplar.quantidade){
-        res.status(400).json({ message: 'Quantidade Inválida' });
+    if(exemplar.preco > 1000.00){
+        res.status(400).json({ message: 'Preço não pode ultrapassar R$ 1000,00' });
         return false;
     }
 
